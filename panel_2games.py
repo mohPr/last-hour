@@ -12,7 +12,8 @@ OPPS={
  'base_v76': HERE+'/opps/base_v76.py',
  'main': HERE+'/opps/main.py',
  'main1': HERE+'/opps/main1.py',
- 'main_copy_1': HERE+'/opps/main_copy_1.py',
+  'main_copy_1': HERE+'/opps/main_copy_1.py',
+  'opp_master': HERE+'/opps/opp_master.py',
 }
 total=0; wins=0; n=0
 for oname,opath in OPPS.items():

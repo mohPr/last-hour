@@ -4,9 +4,13 @@
 - `final_agent.py` is the current best. `base_dsm348.py` is the weak baseline it descends from.
 - Scores (higher reward wins; margins = US − OPP):
   - Baseline: H2H panel AVG **-50,579**, WINS **0/16**; solo6 mean ~145.6k.
-  - Current: H2H panel AVG **-42,665**, WINS **0/16** (+7,914 closed); solo6 mean **143.2k** (-1.7%).
-- Panel = `panel_2games.py` (8 opps × seeds 200001/200002, our agent seat 0): pipe19, pipe18,
-  kagg, v57, base_v76, main, main1, main_copy_1.
+  - Current: H2H panel AVG **-42,838 over 18 games (9 opps)**, WINS **0/18**
+    (+7.7k closed); solo6 mean **143.2k** (-1.7%). Verified Sep 29 2026:
+    TOTAL=-771081, WINS=0/18, AVG=-42838.
+- Panel = `panel_2games.py` (9 opps × seeds 200001/200002, our agent seat 0): pipe19, pipe18,
+  kagg, v57, base_v76, main, main1, main_copy_1, **opp_master** (extracted from
+  `reference_master_agent.ipynb`, cell-3 blob verified by sha256; entry `agent` alias at
+  file end; solo 172k / H2H −44k mean — pipe19-class, MUST be beaten too).
 - Solo seeds: 300001–300006 (vs PASS dummy). Fresh H2H seeds seen: 300001/300002.
 - Original frozen agent (`my_dsm348.py`, md5 `4da51b90e6457077453fd508e588fc52`) was never
   modified; all work is in this folder. `final_agent.py` must keep `agent()` as the LAST
@@ -84,11 +88,28 @@
 
 ## 8. Validation protocol (results are noisy — this is MANDATORY, not optional)
 - H2H margin noise is ±15–30k per game: our actions change shared prices, town-shop RNG,
-  and weed draws (game RNG is shared). NEVER trust 1–2 games.
-- Promote a change ONLY if ALL THREE agree: (a) solo6 mean not down (guard vs H2H
-  overfit), (b) 16-game panel AVG up with majority of games improving, (c) fresh-seed
-  H2H (seeds 300001/300002 or new 40000x) not collapsing.
-- Screen cheaply first: solo3 (300001–300003) + pipe19 200001/200002; panel only finalists.
+  and weed draws (game RNG is shared). NEVER trust 1–2 games. ANY code change reshuffles
+  the species line via shop RNG — 2-seed screens cannot resolve effects under ~10–20k.
+- **H2H margin is the ONLY acceptance metric. Solo NEVER predicts H2H** (prior session:
+  value-sorted selling +4.3k solo / −1.1k H2H; melon-window +3.4k solo / ~0 H2H). Solo is
+  a smoke test only. Screen H2H vs BOTH pipe19 and v57, n≥12 H2H games for finalists,
+  treat sub-2k deltas as zero.
+- Promote a change ONLY if ALL THREE agree: (a) solo6 mean not down vs `final_agent.py`
+  (guard, not verdict), (b) 18-game panel AVG up with most games improving,
+  (c) fresh-seed H2H (new seeds like 400001+) not collapsing.
+- Screen cheaply first: pipe19+v57 H2H on 200001/200002; panel only finalists.
 - Always report US absolutes + OPP absolutes + margin (margin alone lies — see §3 denial
-  lesson). Never modify `opps/`. Full rewrites are allowed; overfitting to these 8 opps
+  lesson). Never modify `opps/`. Full rewrites are allowed; overfitting to these 9 opps
   (e.g. seed-specific hacks) is forbidden — the grader may use fresh seeds.
+- Read `FINDINGS.md` IN FULL before designing anything: months of falsified variants
+  (d0 sealed H4/2C+3S/M6 — 5th hire −40k; wheat gate stays yld≥2; deaths are symptom not
+  cause; gap-fill priority levers all falsified; goose cap −3.5k; herd-cap decouple
+  fails). Do not re-run its rejected list.
+- Open validated leads (UNTRIED in our line, from FINDINGS.md): (i) take the 4th
+  quadrant (unclamp `land_want`, +3.2k H2H t≈2 both opps); (ii) d10 melon mass-pick —
+  12 plants harvested d10 same-morning (5.0→4.0→3.0 late decay, −$9.9k hole);
+  (iii) milk yield/cow 22.5→27.9 (cause open: NOT care/cap/shed — measure first);
+  (iv) sale-reservation RACE (opp_v57 RACE block: first seller takes the price;
+  our polarity is inverted — dump-while-strong is a weak form, race the ORDER
+  SEQUENCE next); (v) straw water coverage 57%→~90% of days (29 plants, ~11 die,
+  each live plant ~$1.6k; NOT eve coverage which is 90%).
